@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,5 +21,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+
+// Por lo que veo, la ruta de recurso no se genera de forma automáticamente
+Route::resource('albumes', AlbumController::class)
+    ->parameters(['albumes' => 'album']);  // En caso de problemas con los plurales, indicarlo así
 
 require __DIR__.'/auth.php';
