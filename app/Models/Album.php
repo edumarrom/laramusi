@@ -9,5 +9,13 @@ class Album extends Model
 {
     use HasFactory;
 
+    /**
+     * Tabla asociada al modelo.
+     */
     protected $table = 'albumes';
+
+    /**
+     * Atributos asignables de forma masiva.
+     */
+    public $fillable = ['titulo', 'autor'];
 }
