@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 use App\Models\Album;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class AlbumController extends Controller
 {
@@ -29,7 +31,11 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        //
+        $album = new Album();
+
+        return view('albumes.create', [
+            'album' => $album,
+        ]);
     }
 
     /**
@@ -40,7 +46,24 @@ class AlbumController extends Controller
      */
     public function store(StoreAlbumRequest $request)
     {
-        //
+        $validados = $request->validated();
+        // return dd($validados);
+        $album = new Album($validados);
+        $album->save();
+
+        $request->file('portada')->storeAs(
+            'portadas',
+            $album->id . '.jpg',
+            'local',
+        );
+        $img = Image::make(storage_path('app/portadas/' . $album->id . '.jpg'));
+        $img->resize(100, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        Storage::makeDirectory('public/portadas');
+        $img->save(public_path('storage/portadas/' . $album->id . '.jpg'));
+        Storage::disk('local')->delete('portadas/' . $album->id . '.jpg');
+        return redirect()->route('albumes.index');
     }
 
     /**
@@ -86,5 +109,11 @@ class AlbumController extends Controller
     public function destroy(Album $album)
     {
         //
+    }
+
+    public function descargar(Album $album)
+    {
+        $img = public_path('storage/portadas/' . $album->id . '.jpg');
+        return response()->download($img);
     }
 }

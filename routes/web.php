@@ -27,4 +27,7 @@ Route::get('/dashboard', function () {
 Route::resource('albumes', AlbumController::class)
     ->parameters(['albumes' => 'album']);  // En caso de problemas con los plurales, indicarlo así
 
+Route::get('/albumes/{album}/descargar', [AlbumController::class, 'descargar'])
+    ->name('albumes-descargar');
+
 require __DIR__.'/auth.php';
