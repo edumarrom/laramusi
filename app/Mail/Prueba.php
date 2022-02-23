@@ -11,14 +11,16 @@ class Prueba extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $nombre;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($nombre)
     {
-        //
+        $this->nombre = $nombre;
     }
 
     /**
@@ -28,6 +30,9 @@ class Prueba extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        // TODO: ¿Me tengo que crear una cuenta de correo?
+        // https://github.com/mailhog/MailHog
+        return $this->from('hello@laramusi.com', 'Laramusi')
+            ->view('emails.prueba');
     }
 }

@@ -63,7 +63,7 @@ class AlbumController extends Controller
         Storage::makeDirectory('public/portadas');
         $img->save(public_path('storage/portadas/' . $album->id . '.jpg'));
         Storage::disk('local')->delete('portadas/' . $album->id . '.jpg');
-        return redirect()->route('albumes.index');
+        return redirect()->route('albumes.index')->with('success', 'Album creado con exito');
     }
 
     /**
@@ -74,7 +74,9 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        //
+        return view('albumes.show', [
+            'album' => $album,
+        ]);
     }
 
     /**
@@ -85,7 +87,9 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        //
+        return view('albumes.edit', [
+            'album' => $album,
+        ]);
     }
 
     /**
@@ -97,7 +101,19 @@ class AlbumController extends Controller
      */
     public function update(UpdateAlbumRequest $request, Album $album)
     {
-        //
+        $validados = $request->validated();
+        $album->titulo = $validados['titulo'];
+        $album->autor = $validados['autor'];
+        $album->save();
+
+        if ($request->file('portada')) {
+            $request->file('portada')->storeAs(
+                'portadas',
+                $album->id . '.jpg',
+                'local',
+            );
+
+        $img = Image::make()storage_path('app/portadas' . $album->id . '.jpg');
     }
 
     /**

@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\TemaController;
+use App\Mail\Prueba;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,7 +30,14 @@ Route::get('/dashboard', function () {
 Route::resource('albumes', AlbumController::class)
     ->parameters(['albumes' => 'album']);  // En caso de problemas con los plurales, indicarlo así
 
+Route::resource('temas', TemaController::class)
+    ->parameters(['temas' => 'tema']);
+
 Route::get('/albumes/{album}/descargar', [AlbumController::class, 'descargar'])
     ->name('albumes-descargar');
 
-require __DIR__.'/auth.php';
+Route::get('/correo', function () {
+    Mail::to('contacto@laramusi.com')->send(new Prueba('Vicenta'));
+});
+
+require __DIR__ . '/auth.php';

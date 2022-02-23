@@ -15,7 +15,7 @@ class TemaController extends Controller
      */
     public function index()
     {
-        //
+        return 'Hola Don pepito';
     }
 
     /**
